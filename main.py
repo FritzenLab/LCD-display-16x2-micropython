@@ -1,6 +1,3 @@
-# Rui Santos & Sara Santos - Random Nerd Tutorials
-# Complete project details at https://RandomNerdTutorials.com/micropython-i2c-lcd-esp32-esp8266/
-
 from machine import Pin, SoftI2C, I2C, ADC
 from machine_i2c_lcd import I2cLcd
 import time
@@ -27,28 +24,19 @@ I2C_ADDR = 0x3D
 I2C_NUM_ROWS = 2
 I2C_NUM_COLS = 16
 
-# Initialize I2C and LCD objects
-#i2c = SoftI2C(sda=Pin(21), scl=Pin(22), freq=400000)
-
-# for ESP8266, uncomment the following line
-#i2c = SoftI2C(sda=Pin(4), scl=Pin(5), freq=400_000)
 i2c = I2C(id=0, scl=5, sda=4, freq=400_000)
 devices = i2c.scan()
 print("I2C devices:", [hex(d) for d in devices])
 
 lcd = I2cLcd(i2c, I2C_ADDR, I2C_NUM_ROWS, I2C_NUM_COLS)
 
-
-lcd.putstr("It's working :)")
-sleep(4)
-
 try:
     while True:
         currenttime= time.ticks_ms() #Every time it passes here, gets the current time
-        if time.ticks_diff(time.ticks_ms(), initialtime) > 100: # this IF will be true every 1000 ms
+        if time.ticks_diff(time.ticks_ms(), initialtime) > 100: # this IF will be true every 100 ms
             initialtime= time.ticks_ms() #update with the "current" time
             display= display + 1
-            if(display > 9):
+            if(display > 9): #display is updated every 10x 100ms
                 display= 0
                 counter= counter + 1
                 # Clear the LCD
@@ -82,7 +70,7 @@ try:
                 
              
 
-            if time.ticks_diff(time.ticks_ms(), buttontime) > 20: # this IF will be True every 2000 ms
+            if time.ticks_diff(time.ticks_ms(), buttontime) > 20: # this IF will be True every 20 ms
                 buttontime= time.ticks_ms() 
                 
                 if button.value() == 1 and laststate == 0:
